@@ -1,2 +1,632 @@
-# knownema
-Smart Nematode Identification Tool
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNOWNEMA: SMART NEMATODE MORPHOMETRIC IDENTIFICATION TOOL</title>
+    <style>
+        :root {
+            --primary: #1b5e20;
+            --primary-light: #2e7d32;
+            --accent: #81c784;
+            --bg-color: #ffffff;
+            --card-bg: #f9fbf9;
+            --text-main: #2b2b2b;
+            --text-muted: #666666;
+            --border: #c8e6c9;
+            --highlight: #fffde7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            color: var(--text-main);
+            margin: 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 4px 0;
+            font-size: 21px;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            margin: 0 0 8px 0;
+            color: var(--accent);
+            font-size: 13px;
+        }
+
+        .credentials {
+            font-size: 11px;
+            color: #dcedc8;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            padding-top: 6px;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .step-container {
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Wizard Progress Indicator */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            gap: 5px;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            min-width: 95px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .progress-step.active {
+            color: var(--primary-light);
+        }
+
+        .progress-step .circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 4px auto;
+            font-size: 11px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .circle {
+            background: var(--primary-light);
+            color: white;
+            box-shadow: 0 0 0 3px var(--border);
+        }
+
+        .progress-step.completed .circle {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--primary);
+            font-size: 12px;
+        }
+
+        .hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 9px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background: var(--card-bg);
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            background: #ffffff;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        button {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        /* Results Panel Styling */
+        .results-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 800px) {
+            .results-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .result-box h3 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 14px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .index-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            font-size: 12px;
+        }
+
+        .match-card {
+            background: white;
+            border-left: 4px solid var(--primary-light);
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .match-card h4 {
+            margin: 0 0 2px 0;
+            color: var(--primary);
+            font-size: 13px;
+        }
+
+        .match-card p {
+            margin: 0;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .formula-legend-box {
+            background: var(--highlight);
+            border: 1px solid #fff59d;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>KNOWNEMA: SMART NEMATODE MORPHOMETRIC IDENTIFICATION TOOL</h1>
+        <p>De Man Formulae & Complete Character Taxonomic Diagnostic Suite</p>
+        <div class="credentials">
+            Developed by <strong>Mr. Shivprasad Tingare</strong> and <strong>Dr. Somnath Waghmare</strong>
+        </div>
+    </header>
+
+    <div class="content">
+        <!-- Progress Steps Bar -->
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-step active" data-step="1"><div class="circle">1</div>General Body</div>
+            <div class="progress-step" data-step="2"><div class="circle">2</div>Esophagus/Stylet</div>
+            <div class="progress-step" data-step="3"><div class="circle">3</div>Tail & Annules</div>
+            <div class="progress-step" data-step="4"><div class="circle">4</div>Gonads & Vulva</div>
+            <div class="progress-step" data-step="5"><div class="circle">5</div>Pores/Phasmids</div>
+            <div class="progress-step" data-step="6"><div class="circle">6</div>Results</div>
+        </div>
+
+        <form id="comprehensiveNematodeForm" onsubmit="event.preventDefault();">
+            
+            <!-- STEP 1: General Body Dimensions -->
+            <div class="step-container active" id="step-1">
+                <h3>Step 1: General Body Dimensions</h3>
+                <p class="hint">Enter overall specimen parameters ($n, L, max\ diam$).</p>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="n">Sample Specimen Count ($n$):</label>
+                        <input type="number" id="n" value="10" placeholder="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="L">Overall Body Length ($L$) in mm:</label>
+                        <input type="number" id="L" step="0.001" placeholder="e.g. 0.85" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="maxDiam">Greatest Body Diameter ($max\ diam$) in µm:</label>
+                        <input type="number" id="maxDiam" step="0.1" placeholder="e.g. 22.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="labialWidth">Labial Region Width in µm:</label>
+                        <input type="number" id="labialWidth" step="0.1" placeholder="e.g. 7.5">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <div></div>
+                    <button type="button" class="btn-primary" onclick="goToStep(2)">Next Step &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Esophageal & Stylet Metrics -->
+            <div class="step-container" id="step-2">
+                <h3>Step 2: Esophageal Region & Stylet Structure</h3>
+                <p class="hint">Enter indices <b>b</b>, <b>b'</b>, and stylet attributes ($s, m, o$).</p>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="esophDist">Anterior to Esophago-Intestinal Valve in µm ($b$):</label>
+                        <input type="number" id="esophDist" step="0.1" placeholder="e.g. 95.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="esophBaseDist">Anterior to Esophageal Glands Base in µm ($b'$):</label>
+                        <input type="number" id="esophBaseDist" step="0.1" placeholder="e.g. 110.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="styletLen">Stylet / Spear Length ($s$) in µm:</label>
+                        <input type="number" id="styletLen" step="0.1" placeholder="e.g. 20.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="conusRatio">Stomatostyle Conus Ratio ($m$) %:</label>
+                        <input type="number" id="conusRatio" step="0.1" placeholder="e.g. 50">
+                    </div>
+                    <div class="form-group">
+                        <label for="dorsalGlandOrifice">Dorsal Gland Orifice from Knobs ($o$) %:</label>
+                        <input type="number" id="dorsalGlandOrifice" step="0.1" placeholder="e.g. 15">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-secondary" onclick="goToStep(1)">&larr; Back</button>
+                    <button type="button" class="btn-primary" onclick="goToStep(3)">Next Step &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Tail & Cuticular Annules -->
+            <div class="step-container" id="step-3">
+                <h3>Step 3: Tail Proportions & Cuticular Annulation</h3>
+                <p class="hint">Tail dimensions ($c, c'$) and cuticular annule indexes ($R, R_{ex}$).</p>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="tailLength">Tail Length ($tail$) in µm:</label>
+                        <input type="number" id="tailLength" step="0.1" placeholder="e.g. 45.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="analDiam">Body Diameter at Anus/Cloaca in µm ($c'$):</label>
+                        <input type="number" id="analDiam" step="0.1" placeholder="e.g. 14.0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalAnnules">Total Body Annules ($R$):</label>
+                        <input type="number" id="totalAnnules" placeholder="e.g. 350">
+                    </div>
+                    <div class="form-group">
+                        <label for="annulesExPore">Annules from Anterior to Excretory Pore ($R_{ex}$):</label>
+                        <input type="number" id="annulesExPore" placeholder="e.g. 90">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-secondary" onclick="goToStep(2)">&larr; Back</button>
+                    <button type="button" class="btn-primary" onclick="goToStep(4)">Next Step &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 4: Reproductive & Gonadal Systems -->
+            <div class="step-container" id="step-4">
+                <h3>Step 4: Reproductive Systems & Gonads</h3>
+                <p class="hint">Vulva position ($V\%$), Anterior/Posterior gonads ($G_1, G_2$), and Male Testis ($T\%$).</p>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="vulvaDist">Distance from Anterior to Vulva ($V_{dist}$) in mm:</label>
+                        <input type="number" id="vulvaDist" step="0.001" placeholder="e.g. 0.48">
+                    </div>
+                    <div class="form-group">
+                        <label for="g1Gonad">Anterior Female Gonad length ratio ($G_1$) %:</label>
+                        <input type="number" id="g1Gonad" step="0.1" placeholder="e.g. 28">
+                    </div>
+                    <div class="form-group">
+                        <label for="g2Gonad">Posterior Female Gonad length ratio ($G_2$) %:</label>
+                        <input type="number" id="g2Gonad" step="0.1" placeholder="e.g. 25">
+                    </div>
+                    <div class="form-group">
+                        <label for="maleGonadT">Male Testis Length ratio ($T$) %:</label>
+                        <input type="number" id="maleGonadT" step="0.1" placeholder="e.g. 60">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-secondary" onclick="goToStep(3)">&larr; Back</button>
+                    <button type="button" class="btn-primary" onclick="goToStep(5)">Next Step &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 5: Phasmids & Excretory Pores -->
+            <div class="step-container" id="step-5">
+                <h3>Step 5: Pores & Phasmid Locations</h3>
+                <p class="hint">Excretory pore distance ($SE$) and Phasmid position index ($P\%$).</p>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="exPoreDist">Excretory Pore Distance from Anterior ($SE$) in µm:</label>
+                        <input type="number" id="exPoreDist" step="0.1" placeholder="e.g. 120.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="phasmidPos">Phasmid position relative to tail length ($P$) %:</label>
+                        <input type="number" id="phasmidPos" step="0.1" placeholder="e.g. 45">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-secondary" onclick="goToStep(4)">&larr; Back</button>
+                    <button type="button" class="btn-primary" onclick="runComprehensiveAnalysis()">Compute Identification &rarr;</button>
+                </div>
+            </div>
+
+            <!-- STEP 6: Final Comprehensive Results -->
+            <div class="step-container" id="step-6">
+                <h3>Step 6: Diagnostic Results & Matching Matrix</h3>
+                <p class="hint">Calculated morphological profile compared against taxonomic profiles.</p>
+
+                <div class="formula-legend-box">
+                    <strong>Indices Overview:</strong> <b>a, b, b', c, c', V%</b> (Proportions) • <b>s</b> (Stylet) • <b>m</b> (Conus %) • <b>o</b> (Dorsal Orifice %) • <b>G1/G2/T</b> (Gonads)
+                </div>
+
+                <div class="results-wrapper">
+                    <div class="result-box">
+                        <h3>Calculated Parameters</h3>
+                        <div id="fullIndexReadouts"></div>
+                    </div>
+
+                    <div class="result-box">
+                        <h3>Taxonomic Matching Profiles</h3>
+                        <div id="fullMatchResults"></div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-secondary" onclick="goToStep(1)">&larr; Restart Analysis</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    const comprehensiveDatabase = [
+        {
+            name: "Meloidogyne incognita (Root-knot female)",
+            ranges: { a: [2.0, 3.5], b: [0, 0], c: [0, 5], c_prime: [0.1, 0.8], v: [45, 52], stylet: [15, 22], o: [10, 20] }
+        },
+        {
+            name: "Ditylenchus dipsaci (Stem & bulb nematode)",
+            ranges: { a: [35, 55], b: [6.0, 8.5], c: [12, 20], c_prime: [4.5, 6.5], v: [78, 84], stylet: [10, 13], o: [9, 14] }
+        },
+        {
+            name: "Pratylenchus penetrans (Root-lesion nematode)",
+            ranges: { a: [20, 32], b: [5.0, 7.0], c: [18, 25], c_prime: [1.8, 2.8], v: [75, 85], stylet: [15, 18], o: [22, 30] }
+        },
+        {
+            name: "Xiphinema index (Dagger nematode)",
+            ranges: { a: [50, 75], b: [7.0, 10.0], c: [60, 95], c_prime: [0.8, 1.5], v: [45, 55], stylet: [120, 145], o: [15, 25] }
+        },
+        {
+            name: "Globodera rostochiensis (Potato cyst nematode - Female)",
+            ranges: { a: [1.8, 3.0], b: [0, 0], c: [0, 4], c_prime: [0.1, 0.5], v: [70, 85], stylet: [18, 22], o: [10, 18] }
+        },
+        {
+            name: "Caenorhabditis elegans (Free-living model organism)",
+            ranges: { a: [12, 22], b: [3.5, 5.5], c: [10, 20], c_prime: [4.0, 7.0], v: [45, 55], stylet: [0, 0], o: [0, 0] }
+        }
+    ];
+
+    function goToStep(step) {
+        document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+        document.getElementById(`step-${step}`).classList.add('active');
+
+        document.querySelectorAll('.progress-step').forEach(el => {
+            const sNum = parseInt(el.getAttribute('data-step'));
+            el.classList.remove('active', 'completed');
+            if(sNum === step) {
+                el.classList.add('active');
+            } else if(sNum < step) {
+                el.classList.add('completed');
+            }
+        });
+    }
+
+    function runComprehensiveAnalysis() {
+        const L_mm = parseFloat(document.getElementById('L').value) || 0;
+        const maxDiam_um = parseFloat(document.getElementById('maxDiam').value) || 0;
+        const esophDist_um = parseFloat(document.getElementById('esophDist').value) || 0;
+        const esophBaseDist_um = parseFloat(document.getElementById('esophBaseDist').value) || 0;
+        const styletLen_um = parseFloat(document.getElementById('styletLen').value) || 0;
+        const conusRatio = parseFloat(document.getElementById('conusRatio').value);
+        const dorsalGlandOrifice = parseFloat(document.getElementById('dorsalGlandOrifice').value);
+        const tailLength_um = parseFloat(document.getElementById('tailLength').value) || 0;
+        const analDiam_um = parseFloat(document.getElementById('analDiam').value) || 0;
+        const vulvaDist_mm = parseFloat(document.getElementById('vulvaDist').value);
+        const g1Gonad = parseFloat(document.getElementById('g1Gonad').value);
+        const g2Gonad = parseFloat(document.getElementById('g2Gonad').value);
+        const maleGonadT = parseFloat(document.getElementById('maleGonadT').value);
+        const phasmidPos = parseFloat(document.getElementById('phasmidPos').value);
+
+        if(L_mm <= 0 || maxDiam_um <= 0 || tailLength_um <= 0 || analDiam_um <= 0) {
+            alert("Please ensure main metrics (Length, Max Diameter, Tail Length, Anal Diameter) are correctly entered.");
+            goToStep(1);
+            return;
+        }
+
+        const L_um = L_mm * 1000;
+
+        const a = L_um / maxDiam_um;
+        const b = esophDist_um > 0 ? L_um / esophDist_um : 0;
+        const b_prime = esophBaseDist_um > 0 ? L_um / esophBaseDist_um : 0;
+        const c = tailLength_um > 0 ? L_um / tailLength_um : 0;
+        const c_prime = tailLength_um / analDiam_um;
+        const V_percent = (!isNaN(vulvaDist_mm) && vulvaDist_mm > 0) ? (vulvaDist_mm / L_mm) * 100 : null;
+
+        let htmlReadouts = `
+            <div class="index-row"><span>Specimen count (<i>n</i>):</span> <strong>${document.getElementById('n').value || 1}</strong></div>
+            <div class="index-row"><span>Body Length (<i>L</i>):</span> <strong>${L_mm} mm</strong></div>
+            <div class="index-row"><span>Index <b>a</b>:</span> <strong>${a.toFixed(1)}</strong></div>
+            <div class="index-row"><span>Index <b>b</b>:</span> <strong>${b > 0 ? b.toFixed(1) : 'N/A'}</strong></div>
+            <div class="index-row"><span>Index <b>b'</b>:</span> <strong>${b_prime > 0 ? b_prime.toFixed(1) : 'N/A'}</strong></div>
+            <div class="index-row"><span>Index <b>c</b>:</span> <strong>${c > 0 ? c.toFixed(1) : 'N/A'}</strong></div>
+            <div class="index-row"><span>Index <b>c'</b>:</span> <strong>${c_prime.toFixed(1)}</strong></div>
+            <div class="index-row"><span>Vulva Position (<b>V%</b>):</span> <strong>${V_percent !== null ? V_percent.toFixed(1) + '%' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Stylet Length (<i>s</i>):</span> <strong>${styletLen_um > 0 ? styletLen_um + ' µm' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Conus Ratio (<i>m</i>):</span> <strong>${!isNaN(conusRatio) ? conusRatio + '%' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Dorsal Orifice (<i>o</i>):</span> <strong>${!isNaN(dorsalGlandOrifice) ? dorsalGlandOrifice + '%' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Anterior Gonad (<i>G<sub>1</sub></i>):</span> <strong>${!isNaN(g1Gonad) ? g1Gonad + '%' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Posterior Gonad (<i>G<sub>2</sub></i>):</span> <strong>${!isNaN(g2Gonad) ? g2Gonad + '%' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Male Gonad (<i>T</i>):</span> <strong>${!isNaN(maleGonadT) ? maleGonadT + '%' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Phasmid Pos (<i>P</i>):</span> <strong>${!isNaN(phasmidPos) ? phasmidPos + '%' : 'N/A'}</strong></div>
+        `;
+        document.getElementById('fullIndexReadouts').innerHTML = htmlReadouts;
+
+        let matches = [];
+        comprehensiveDatabase.forEach(item => {
+            let points = 0;
+            let criteriaCount = 4;
+
+            if(inRange(a, item.ranges.a)) points++;
+            if(inRange(c, item.ranges.c)) points++;
+            if(inRange(c_prime, item.ranges.c_prime)) points++;
+
+            if(V_percent !== null && item.ranges.v) {
+                criteriaCount++;
+                if(inRange(V_percent, item.ranges.v)) points++;
+            }
+
+            if(styletLen_um > 0 && item.ranges.stylet) {
+                criteriaCount++;
+                if(inRange(styletLen_um, item.ranges.stylet)) points++;
+            }
+
+            let scorePercent = Math.round((points / criteriaCount) * 100);
+            if(scorePercent >= 40) {
+                matches.push({ name: item.name, score: scorePercent });
+            }
+        });
+
+        matches.sort((x, y) => y.score - x.score);
+
+        let matchContainer = document.getElementById('fullMatchResults');
+        matchContainer.innerHTML = '';
+
+        if(matches.length === 0) {
+            matchContainer.innerHTML = `<p style="color:#d32f2f; font-weight:600;">No close taxonomic matches found. Please verify unit measurements (mm vs µm).</p>`;
+        } else {
+            matches.forEach(m => {
+                matchContainer.innerHTML += `
+                    <div class="match-card">
+                        <h4>${m.name}</h4>
+                        <p>Confidence Compatibility Score: <strong>${m.score}%</strong> match</p>
+                    </div>
+                `;
+            });
+        }
+
+        goToStep(6);
+    }
+
+    function inRange(val, range) {
+        return val >= range[0] && val <= range[1];
+    }
+</script>
+
+</body>
+</html>
