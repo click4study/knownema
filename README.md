@@ -580,24 +580,34 @@
         let matches = [];
         comprehensiveDatabase.forEach(item => {
             let points = 0;
-            let criteriaCount = 4;
+            let criteriaCount = 3; // Corrected base criteria count for mandatory core indices (a, c, c_prime)
 
-            if(inRange(a, item.ranges.a)) points++;
-            if(inRange(c, item.ranges.c)) points++;
-            if(inRange(c_prime, item.ranges.c_prime)) points++;
+            if (inRange(a, item.ranges.a)) points++;
+            if (inRange(c, item.ranges.c)) points++;
+            if (inRange(c_prime, item.ranges.c_prime)) points++;
 
-            if(V_percent !== null && item.ranges.v) {
+            if (b > 0 && item.ranges.b) {
                 criteriaCount++;
-                if(inRange(V_percent, item.ranges.v)) points++;
+                if (inRange(b, item.ranges.b)) points++;
             }
 
-            if(styletLen_um > 0 && item.ranges.stylet) {
+            if (V_percent !== null && item.ranges.v) {
                 criteriaCount++;
-                if(inRange(styletLen_um, item.ranges.stylet)) points++;
+                if (inRange(V_percent, item.ranges.v)) points++;
+            }
+
+            if (styletLen_um > 0 && item.ranges.stylet) {
+                criteriaCount++;
+                if (inRange(styletLen_um, item.ranges.stylet)) points++;
+            }
+
+            if (!isNaN(dorsalGlandOrifice) && dorsalGlandOrifice > 0 && item.ranges.o) {
+                criteriaCount++;
+                if (inRange(dorsalGlandOrifice, item.ranges.o)) points++;
             }
 
             let scorePercent = Math.round((points / criteriaCount) * 100);
-            if(scorePercent >= 40) {
+            if (scorePercent >= 40) {
                 matches.push({ name: item.name, score: scorePercent });
             }
         });
