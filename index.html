@@ -526,7 +526,6 @@
             const anal = document.getElementById('analDiam').value;
             if(!tail || !anal) {
                 alert("Please fill out tail length and anal body diameter.");
-                goToStep(3);
                 return;
             }
         }
@@ -595,6 +594,10 @@
             <div class="index-row"><span>Posterior Gonad (<i>G<sub>2</sub></i>):</span> <strong>${!isNaN(g2Gonad) ? g2Gonad + '%' : 'N/A'}</strong></div>
             <div class="index-row"><span>Male Gonad (<i>T</i>):</span> <strong>${!isNaN(maleGonadT) ? maleGonadT + '%' : 'N/A'}</strong></div>
             <div class="index-row"><span>Phasmid Pos (<i>P</i>):</span> <strong>${!isNaN(phasmidPos) ? phasmidPos + '%' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Total Annules (<i>R</i>):</span> <strong>${!isNaN(totalAnnules) ? totalAnnules : 'N/A'}</strong></div>
+            <div class="index-row"><span>Excretory Annules (<i>R<sub>ex</i></sub>):</span> <strong>${!isNaN(annulesExPore) ? annulesExPore : 'N/A'}</strong></div>
+            <div class="index-row"><span>Excretory Pore (<i>SE</i>):</span> <strong>${!isNaN(exPoreDist) ? exPoreDist + ' µm' : 'N/A'}</strong></div>
+            <div class="index-row"><span>Labial Width:</span> <strong>${!isNaN(labialWidth) ? labialWidth + ' µm' : 'N/A'}</strong></div>
         `;
         document.getElementById('fullIndexReadouts').innerHTML = htmlReadouts;
 
@@ -623,7 +626,7 @@
             if (!isNaN(labialWidth)) { criteriaCount++; if (inRange(labialWidth, item.ranges.labial)) points++; }
 
             let scorePercent = Math.round((points / criteriaCount) * 100);
-            if (scorePercent >= 35) {
+            if (scorePercent >= 40) {
                 matches.push({ name: item.name, score: scorePercent });
             }
         });
