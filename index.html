@@ -512,32 +512,36 @@
         }
     ];
 
-    function goToStep(step) {
-        if(step === 2) {
+    function goToStep(targetStep) {
+        // If moving forward from Step 1, validate body length and max diameter
+        if (targetStep === 3) {
             const L = document.getElementById('L').value;
             const maxDiam = document.getElementById('maxDiam').value;
-            if(!L || !maxDiam) {
+            if (!L || !maxDiam) {
                 alert("Please fill out overall body length and maximum diameter.");
                 return;
             }
         }
-        if(step === 3) {
+        
+        // If moving forward from Step 3 to Step 4, validate tail length and anal diameter
+        if (targetStep === 4) {
             const tail = document.getElementById('tailLength').value;
             const anal = document.getElementById('analDiam').value;
-            if(!tail || !anal) {
+            if (!tail || !anal) {
                 alert("Please fill out tail length and anal body diameter.");
                 return;
             }
         }
+
         document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-        document.getElementById(`step-${step}`).classList.add('active');
+        document.getElementById(`step-${targetStep}`).classList.add('active');
 
         document.querySelectorAll('.progress-step').forEach(el => {
             const sNum = parseInt(el.getAttribute('data-step'));
             el.classList.remove('active', 'completed');
-            if(sNum === step) {
+            if(sNum === targetStep) {
                 el.classList.add('active');
-            } else if(sNum < step) {
+            } else if(sNum < targetStep) {
                 el.classList.add('completed');
             }
         });
@@ -595,7 +599,7 @@
             <div class="index-row"><span>Male Gonad (<i>T</i>):</span> <strong>${!isNaN(maleGonadT) ? maleGonadT + '%' : 'N/A'}</strong></div>
             <div class="index-row"><span>Phasmid Pos (<i>P</i>):</span> <strong>${!isNaN(phasmidPos) ? phasmidPos + '%' : 'N/A'}</strong></div>
             <div class="index-row"><span>Total Annules (<i>R</i>):</span> <strong>${!isNaN(totalAnnules) ? totalAnnules : 'N/A'}</strong></div>
-            <div class="index-row"><span>Excretory Annules (<i>R<sub>ex</i></sub>):</span> <strong>${!isNaN(annulesExPore) ? annulesExPore : 'N/A'}</strong></div>
+            <div class="index-row"><span>Excretory Annules (<i>R<sub>ex</sub></i>):</span> <strong>${!isNaN(annulesExPore) ? annulesExPore : 'N/A'}</strong></div>
             <div class="index-row"><span>Excretory Pore (<i>SE</i>):</span> <strong>${!isNaN(exPoreDist) ? exPoreDist + ' µm' : 'N/A'}</strong></div>
             <div class="index-row"><span>Labial Width:</span> <strong>${!isNaN(labialWidth) ? labialWidth + ' µm' : 'N/A'}</strong></div>
         `;
