@@ -55,15 +55,6 @@
             font-size: 13px;
         }
 
-        .credentials {
-            font-size: 11px;
-            color: #dcedc8;
-            border-top: 1px solid rgba(255,255,255,0.15);
-            padding-top: 6px;
-            margin-top: 6px;
-            font-style: italic;
-        }
-
         .content {
             padding: 20px;
         }
@@ -290,9 +281,6 @@
     <header>
         <h1>KNOWNEMA: SMART NEMATODE MORPHOMETRIC IDENTIFICATION TOOL</h1>
         <p>De Man Formulae & Complete Character Taxonomic Diagnostic Suite</p>
-        <div class="credentials">
-            Developed by <strong>Mr. Shivprasad Tingare</strong> and <strong>Dr. Somnath Waghmare</strong>
-        </div>
     </header>
 
     <div class="content">
@@ -488,27 +476,27 @@
     const comprehensiveDatabase = [
         {
             name: "Meloidogyne incognita (Root-knot female)",
-            ranges: { a: [2.0, 3.5], b: [2.5, 5.0], b_prime: [3.0, 6.0], c: [0.1, 5], c_prime: [0.1, 0.8], v: [45, 52], stylet: [15, 22], m: [45, 55], o: [10, 20], g1: [20, 40], g2: [20, 40], t: [0, 0], p: [0, 0], r: [0, 0], rex: [0, 0], se: [80, 120], labial: [5, 10] }
+            ranges: { a: [2.0, 3.5], b: [2.5, 5.0], b_prime: [3.0, 6.0], c: [0.1, 5], c_prime: [0.1, 0.8], v: [45, 52], stylet: [15, 22], m: [45, 55], o: [10, 20], g1: [20, 40], g2: [20, 40], t: [0, 0], p: [0,0], r:[0,0], rex:[0,0], se:[0,0], labial:[0,0] }
         },
         {
             name: "Ditylenchus dipsaci (Stem & bulb nematode)",
-            ranges: { a: [35, 55], b: [6.0, 8.5], b_prime: [7.0, 10.0], c: [12, 20], c_prime: [4.5, 6.5], v: [78, 84], stylet: [10, 13], m: [40, 50], o: [9, 14], g1: [25, 40], g2: [0, 0], t: [30, 50], p: [0, 0], r: [300, 400], rex: [70, 110], se: [90, 130], labial: [6, 9] }
+            ranges: { a: [35, 55], b: [6.0, 8.5], b_prime: [7.0, 10.0], c: [12, 20], c_prime: [4.5, 6.5], v: [78, 84], stylet: [10, 13], m: [40, 50], o: [9, 14], g1: [25, 40], g2: [0, 0], t: [30, 50], p: [0,0], r:[0,0], rex:[0,0], se:[0,0], labial:[0,0] }
         },
         {
             name: "Pratylenchus penetrans (Root-lesion nematode)",
-            ranges: { a: [20, 32], b: [5.0, 7.0], b_prime: [6.0, 8.0], c: [18, 25], c_prime: [1.8, 2.8], v: [75, 85], stylet: [15, 18], m: [45, 55], o: [22, 30], g1: [20, 35], g2: [0, 0], t: [35, 55], p: [40, 60], r: [180, 230], rex: [50, 75], se: [60, 90], labial: [7, 10] }
+            ranges: { a: [20, 32], b: [5.0, 7.0], b_prime: [6.0, 8.0], c: [18, 25], c_prime: [1.8, 2.8], v: [75, 85], stylet: [15, 18], m: [45, 55], o: [22, 30], g1: [20, 35], g2: [0, 0], t: [35, 55], p: [0,0], r:[0,0], rex:[0,0], se:[0,0], labial:[0,0] }
         },
         {
             name: "Xiphinema index (Dagger nematode)",
-            ranges: { a: [50, 75], b: [7.0, 10.0], b_prime: [8.0, 12.0], c: [60, 95], c_prime: [0.8, 1.5], v: [45, 55], stylet: [120, 145], m: [30, 40], o: [15, 25], g1: [10, 25], g2: [10, 25], t: [40, 65], p: [0, 0], r: [0, 0], rex: [0, 0], se: [150, 220], labial: [12, 18] }
+            ranges: { a: [50, 75], b: [7.0, 10.0], b_prime: [8.0, 12.0], c: [60, 95], c_prime: [0.8, 1.5], v: [45, 55], stylet: [120, 145], m: [30, 40], o: [15, 25], g1: [10, 25], g2: [10, 25], t: [40, 60], p: [0,0], r:[0,0], rex:[0,0], se:[0,0], labial:[0,0] }
         },
         {
             name: "Globodera rostochiensis (Potato cyst nematode - Female)",
-            ranges: { a: [1.8, 3.0], b: [2.0, 4.0], b_prime: [2.5, 4.5], c: [0.1, 4], c_prime: [0.1, 0.5], v: [70, 85], stylet: [18, 22], m: [45, 55], o: [10, 18], g1: [30, 50], g2: [30, 50], t: [0, 0], p: [0, 0], r: [0, 0], rex: [0, 0], se: [90, 140], labial: [8, 12] }
+            ranges: { a: [1.8, 3.0], b: [2.0, 4.0], b_prime: [2.5, 4.5], c: [0.1, 4], c_prime: [0.1, 0.5], v: [70, 85], stylet: [18, 22], m: [45, 55], o: [10, 18], g1: [30, 50], g2: [30, 50], t: [0, 0], p: [0,0], r:[0,0], rex:[0,0], se:[0,0], labial:[0,0] }
         },
         {
             name: "Caenorhabditis elegans (Free-living model organism)",
-            ranges: { a: [12, 22], b: [3.5, 5.5], b_prime: [4.0, 6.5], c: [10, 20], c_prime: [4.0, 7.0], v: [45, 55], stylet: [0, 0], m: [0, 0], o: [0, 0], g1: [20, 40], g2: [20, 40], t: [40, 60], p: [0, 0], r: [0, 0], rex: [0, 0], se: [50, 90], labial: [4, 7] }
+            ranges: { a: [12, 22], b: [3.5, 5.5], b_prime: [4.0, 6.5], c: [10, 20], c_prime: [4.0, 7.0], v: [45, 55], stylet: [0, 0], m: [0, 0], o: [0, 0], g1: [20, 40], g2: [20, 40], t: [40, 60], p: [30, 100], r:[200, 400], rex:[0,0], se:[50, 150], labial:[0,0] }
         }
     ];
 
@@ -608,7 +596,7 @@
         let matches = [];
         comprehensiveDatabase.forEach(item => {
             let points = 0;
-            let criteriaCount = 3; // a, c, c_prime baseline
+            let criteriaCount = 3;
 
             if (inRange(a, item.ranges.a)) points++;
             if (inRange(c, item.ranges.c)) points++;
